@@ -1,4 +1,4 @@
-const Order = require("../Models/Order");
+const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 
 // 🔹 PLACE ORDER

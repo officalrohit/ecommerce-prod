@@ -1,4 +1,4 @@
-const Order = require("../Models/Order");
+const Order = require("../models/Order");
 
 const COMMISSION_PERCENT = 10;
 const DELIVERED_STATUS = "Delivered";

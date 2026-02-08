@@ -1,4 +1,4 @@
-const Payout = require("../Models/Payout");
+const Payout = require("../models/Payout");
 
 // 🔹 ADMIN SETTLEMENT DASHBOARD
 exports.getAdminSettlementDashboard = async (req, res) => {

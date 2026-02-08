@@ -1,4 +1,4 @@
-const Order = require("../Models/Order");
+const Order = require("../models/Order");
 
 // 🔹 VENDOR DASHBOARD STATS
 exports.getVendorStats = async (req, res) => {

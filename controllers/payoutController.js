@@ -1,5 +1,5 @@
-const Payout = require("../Models/Payout");
-const Order = require("../Models/Order");
+const Payout = require("../models/Payout");
+const Order = require("../models/Order");
 
 const COMMISSION_PERCENT = 10;
 

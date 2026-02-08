@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const Order = require("../Models/Order");
+const Order = require("../models/Order");
 
 exports.razorpayWebhook = async (req, res) => {
   try {

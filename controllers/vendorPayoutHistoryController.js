@@ -1,4 +1,4 @@
-const Payout = require("../Models/Payout");
+const Payout = require("../models/Payout");
 
 // 🔹 VENDOR PAYOUT HISTORY
 exports.getVendorPayoutHistory = async (req, res) => {
