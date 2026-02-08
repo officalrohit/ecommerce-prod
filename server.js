@@ -3,6 +3,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
+
+const PORT = process.env.PORT || 5000;
+
 dotenv.config();
 connectDB();
 
@@ -32,6 +35,6 @@ app.use("/api/webhooks/razorpay", express.raw({ type: "application/json" }));
 
 app.use(express.json());
 
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
