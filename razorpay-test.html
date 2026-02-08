@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Razorpay Test</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <button id="payBtn">Pay Now</button>
+
+    <script>
+      document.getElementById("payBtn").onclick = async function () {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please login first");
+          return;
+        }
+
+        // 1️⃣ Backend se Razorpay order lo
+        const res = await fetch("http://localhost:5000/api/payment/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            orderId: "6986da7073b506f3dd6acc83",
+          }),
+        });
+
+        const data = await res.json();
+
+        // 2️⃣ Razorpay open karo
+        var options = {
+          key: data.key,
+          order_id: data.razorpayOrderId,
+          amount: data.amount,
+          currency: data.currency,
+
+          handler: function (response) {
+            // 3️⃣ Verify payment
+            fetch("http://localhost:5000/api/payment/verify", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                orderId: "6986da7073b506f3dd6acc83",
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            })
+              .then((res) => res.json())
+              .then(() => alert("Payment Successful ✅"))
+              .catch(() => alert("Payment verification failed ❌"));
+          },
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+      };
+    </script>
+  </body>
+</html>
