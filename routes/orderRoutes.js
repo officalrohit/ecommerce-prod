@@ -3,7 +3,8 @@ const router = express.Router();
 
 const {
   placeOrder,
-  getUserOrders
+  getUserOrders,
+  getOrderById
 } = require("../controllers/orderController");
 
 const protect = require("../middleware/authMiddleware");
