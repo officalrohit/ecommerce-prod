@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -32,6 +31,9 @@ app.use("/api/vendor/payout", require("./routes/vendorPayoutHistoryRoutes"));
 app.use("/api/admin", require("./routes/adminSettlementRoutes"));
 app.use("/api/webhooks", require("./routes/webhookRoutes"));
 app.use("/api/webhooks/razorpay", express.raw({ type: "application/json" }));
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
 
 app.use(express.json());
 
