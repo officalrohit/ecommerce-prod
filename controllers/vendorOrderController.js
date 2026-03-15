@@ -5,39 +5,37 @@ exports.getVendorOrders = async (req, res) => {
   try {
     const vendorId = req.vendor._id;
 
-    // Orders jisme vendor ke products hain
-    const orders = await Order.find({
-      "items.product": { $exists: true }
-    })
+    const orders = await Order.find()
       .populate({
         path: "items.product",
-        select: "title price vendor",
+        select: "title price images vendor"
       })
       .populate("user", "name email")
       .sort({ createdAt: -1 });
 
-    // Sirf wahi items rakho jo is vendor ke hain
-    const vendorOrders = orders
-      .map(order => {
-        const vendorItems = order.items.filter(
-          item =>
-            item.product &&
-            item.product.vendor.toString() === vendorId.toString()
-        );
+    const vendorOrders = [];
 
-        if (vendorItems.length === 0) return null;
+    orders.forEach(order => {
+      const vendorItems = order.items.filter(
+        item =>
+          item.product &&
+          item.product.vendor &&
+          item.product.vendor.toString() === vendorId.toString()
+      );
 
-        return {
+      if (vendorItems.length > 0) {
+        vendorOrders.push({
           _id: order._id,
           user: order.user,
           items: vendorItems,
           status: order.status,
           createdAt: order.createdAt
-        };
-      })
-      .filter(Boolean);
+        });
+      }
+    });
 
     res.json(vendorOrders);
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
