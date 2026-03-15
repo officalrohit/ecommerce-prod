@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 const Vendor = require("../models/Vendor");
 
 const vendorProtect = async (req, res, next) => {
@@ -16,7 +17,29 @@ const vendorProtect = async (req, res, next) => {
       return res.status(403).json({ message: "Vendor access only" });
     }
 
-    const vendor = await Vendor.findById(decoded.id);
+    let vendor = await Vendor.findById(decoded.id);
+
+    // Backward compatibility: older accounts were created in the User model
+    // with role=vendor, but vendor APIs expect a Vendor document.
+    if (!vendor) {
+      const legacyVendorUser = await User.findById(decoded.id);
+
+      if (legacyVendorUser && legacyVendorUser.role === "vendor") {
+        vendor = await Vendor.findOne({ email: legacyVendorUser.email });
+
+        if (!vendor) {
+          vendor = await Vendor.create({
+            shopName: legacyVendorUser.name,
+            ownerName: legacyVendorUser.name,
+            email: legacyVendorUser.email,
+            password: legacyVendorUser.password,
+            isApproved: true,
+            role: "vendor",
+          });
+        }
+      }
+    }
+
     if (!vendor) {
       return res.status(404).json({ message: "Vendor not found" });
     }
